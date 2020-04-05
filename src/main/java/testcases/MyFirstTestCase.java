@@ -18,8 +18,7 @@ public class MyFirstTestCase extends ImplementListener{
 
 	@Test
 	public void myFirstTest(Method method,ITestContext textContext) {
-       
-		HashMap<String, String> hm = new HashMap<String, String>();
+       	HashMap<String, String> hm = new HashMap<String, String>();
 		hm.put("name","1111111");
 		hm.put("name1","2222222");
 		hm.put("name2","3333333");
