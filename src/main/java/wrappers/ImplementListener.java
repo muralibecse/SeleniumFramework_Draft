@@ -25,7 +25,7 @@ public class ImplementListener implements ITestListener	{
 	}
 
 	public void onStart(ITestContext iTestContext) {	
-		System.out.println("I am in onStart method " + iTestContext.getName());
+		System.out.println("I am in onStart method ");
 		iTestContext.setAttribute("WebDriver", wrappers.WebDriverSetup.getWebDriver());
 	}		
 
