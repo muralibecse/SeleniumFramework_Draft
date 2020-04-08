@@ -2,9 +2,10 @@ package testcases;
 
 import java.util.Map;
 
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import pages.LoginPage;
 //import pages.LoginPage;
 import reporters.ExtentTestManager;
 import wrappers.ImplementListener;
@@ -18,16 +19,16 @@ public class MyFirstTestCase extends ImplementListener{
 	@Test(dataProvider = "testdata" ,dataProviderClass = TestDataProvider.class )
 	public void myFirstTest(Map<Object, Object> mapData) {
 
-		ExtentTestManager.startTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "Login and verify the page title");
-		/* LoginPage t1 = new LoginPage(wrappers.WebDriverSetup.getWebDriver()); */
-		
+		ExtentTestManager.startTest("Login and verify the page title");
+
 		System.out.println("Firsttestcase:"+mapData.get("TestCaseName"));
 		
 		System.out.println("Firsttestcase:"+mapData.get("TestCaseDescription"));
 
-		
+		LoginPage t1 = new LoginPage(wrappers.WebDriverSetup.getWebDriver());
+		 t1.launchURL(url);
 		/*
-		 * t1.launchURL(url); t1.
+		 * t1.
 		 * verifyingPageTitle("Personal, Business, Enterprise & Government solutions - Australia Post"
 		 * ) .enterMailID("") .enterPassword("") .LogMeIn() .sampleclilck();
 		 */
@@ -71,7 +72,8 @@ public class MyFirstTestCase extends ImplementListener{
 	 * 
 	 */
 	
-	@AfterClass public void tearDown() {
+	@AfterMethod
+	public void tearDown() {
 		System.out.println("Driver has been quit");
 		wrappers.WebDriverSetup.quitDriver();
 		}

@@ -13,23 +13,22 @@ import org.testng.annotations.DataProvider;
 
 public class TestDataProvider {
 	
-	
-	
-	
-	
-	
 	@DataProvider(name="testdata")
-	public Object[][] dataProviderMethod() throws IOException {
+	public Object[][] MyDataProvider() throws IOException{
+		return dataProviderMethod("TestData","Sheet1");
+	}
+	
+	public Object[][] dataProviderMethod(String ExcelName,String SheetName) throws IOException {
 		System.out.println("data provider loaded");
 		FileInputStream fis = null;
 		XSSFWorkbook wb = null;
 		Object[][] obj = null ;
 		try {
-			File file = new File("./TestData/TestData.xlsx");
+			File file = new File("./TestData/"+ExcelName+".xlsx");
 			fis = new FileInputStream(file);
 			
 			wb = new XSSFWorkbook(fis);
-			XSSFSheet ws = wb.getSheetAt(0);
+			XSSFSheet ws = wb.getSheet(SheetName);
 			
 			int rowCount = ws.getLastRowNum();
 			int colCount = ws.getRow(0).getLastCellNum();
@@ -44,7 +43,7 @@ public class TestDataProvider {
 				
 				Map<Object,Object> dataMap = new HashMap<Object,Object>();
 				for(int j = 0;j<colCount;j++) {
-					System.out.println(i+ws.getRow(0).getCell(j).toString()+"====="+j+ws.getRow(i+1).getCell(j).toString());
+//					System.out.println(i+ws.getRow(0).getCell(j).toString()+"====="+j+ws.getRow(i+1).getCell(j).toString());
 					dataMap.put(ws.getRow(0).getCell(j).toString(), ws.getRow(i+1).getCell(j).toString());
 			}
 				
