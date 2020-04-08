@@ -4,14 +4,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.asserts.SoftAssert;
@@ -45,6 +54,18 @@ public class WrapperMethods extends WebDriverSetup{
 			System.out.println(e.getStackTrace());
 		}
 	}
+	
+	public WebElement waitForElement(WebDriver driver,long time,WebElement element){
+		WebDriverWait wait = new WebDriverWait(driver, time);
+		return wait.until(ExpectedConditions.elementToBeClickable(element));
+	}
+	
+	public WebElement waitForElementWithPollingInterval(WebDriver driver,long time,WebElement element){
+		WebDriverWait wait = new WebDriverWait(driver, time);
+		wait.pollingEvery(5, TimeUnit.SECONDS);
+		wait.ignoring(NoSuchElementException.class);
+		return wait.until(ExpectedConditions.elementToBeClickable(element));
+	}
 
 	public synchronized HashMap ReadExcelDataForTestCase(String SheetName) {
 		HashMap<String, String> hm = new HashMap<String, String>();
@@ -62,27 +83,36 @@ public class WrapperMethods extends WebDriverSetup{
 			}
 
 			for(int i = 0;i<ws.getLastRowNum();i++) {
-
 				for(int j = 0;j<ws.getRow(i).getLastCellNum()-1;j++) {
-
 					if(ws.getRow(i).getCell(executeColumnNumber).getStringCellValue().equalsIgnoreCase("y")) {
-
 						hm.put(ws.getRow(0).getCell(j).getStringCellValue(),ws.getRow(i+1).getCell(j).getStringCellValue());
-
 					}
-
 				}
 			}
 		}catch(Exception e) {
 
 		}
 		return hm;
-
 	}
 
 	public static synchronized void loadConfigurationfiles() throws FileNotFoundException, IOException {
 		config_prop = new Properties();
 		config_prop.load(new FileInputStream(new File("./configuration.properties")));
+	}
+
+	public synchronized String getScreenShot(String imageName) throws IOException{
+
+		if(imageName.equals("")){
+			imageName = "blank";
+		}
+		File image = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		String imagelocation = System.getProperty("user.dir")+"/src/main/java/com/hybridFramework/screenshot/";
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat formater = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
+		String actualImageName = imagelocation+imageName+"_"+formater.format(calendar.getTime())+".png";
+		File destFile = new File(actualImageName);
+		FileUtils.copyFile(image, destFile);
+		return actualImageName;
 	}
 
 
