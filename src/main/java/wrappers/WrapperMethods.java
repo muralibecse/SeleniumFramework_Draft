@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -113,6 +114,15 @@ public class WrapperMethods extends WebDriverSetup{
 		File destFile = new File(actualImageName);
 		FileUtils.copyFile(image, destFile);
 		return actualImageName;
+	}
+	
+	
+	
+	public synchronized void enterTextByXpath(String xpath,String data,String objectname) {
+		
+		getWebDriver().findElement(By.xpath(xpath)).sendKeys(data);
+		
+		
 	}
 
 

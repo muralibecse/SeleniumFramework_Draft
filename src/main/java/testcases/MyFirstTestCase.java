@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
-import pages.testpage1;
+import pages.LoginPage;
 import reporters.ExtentTestManager;
 import wrappers.ImplementListener;
 
@@ -18,12 +18,12 @@ public class MyFirstTestCase extends ImplementListener{
 
 	@Test
 	public void myFirstTest(Method method,ITestContext textContext) {
-//       	HashMap<String, String> hm = new HashMap<String, String>();
+//      HashMap<String, String> hm = new HashMap<String, String>();
 //		hm.put("name","1111111");
 //		hm.put("name1","2222222");
 //		hm.put("name2","3333333");
-//		
-//		//if method name and condition match yes will execute
+		
+//		if method name and condition match yes will execute
 //		
 //		textContext.setAttribute("name", hm);
 //		
@@ -32,9 +32,13 @@ public class MyFirstTestCase extends ImplementListener{
 		
 		
 		ExtentTestManager.startTest(method.getName(), "Login and verify the page title");
-		testpage1 t1 = new testpage1(driver);
+		LoginPage t1 = new LoginPage(driver);
 		t1.launchURL(url);
-		t1.verifyingPageTitle("Personal, Business, Enterprise & Government solutions - Australia Post");
+		t1.verifyingPageTitle("Personal, Business, Enterprise & Government solutions - Australia Post")
+		.enterMailID("")
+		.enterPassword("")
+		.LogMeIn()
+		.sampleclilck();
 		ExtentTestManager.endTest();
 		
 	}
@@ -53,7 +57,7 @@ public class MyFirstTestCase extends ImplementListener{
         ExtentTestManager.startTest(method.getName(), "Login and verify the page title- for second test");
         
 		System.out.println(method.getName());
-		testpage1 t1 = new testpage1(driver);
+		LoginPage t1 = new LoginPage(driver);
 		t1.launchURL(url);
 		t1.verifyingPageTitle("Google");
 		
@@ -65,7 +69,7 @@ public class MyFirstTestCase extends ImplementListener{
         ExtentTestManager.startTest(method.getName(), "Login and verify the page title- for third test");
         
         System.out.println(method.getName());
-		testpage1 t1 = new testpage1(driver);
+		LoginPage t1 = new LoginPage(driver);
 		t1.launchURL(url);
 		t1.verifyingPageTitle("Personal, Business, Enterprise & Government Solutions - Australia Post");
 		
