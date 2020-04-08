@@ -19,7 +19,7 @@ public class MyFirstTestCase extends ImplementListener{
 	@Test(dataProvider = "testdata" ,dataProviderClass = TestDataProvider.class )
 	public void myFirstTest(Map<Object, Object> mapData) {
 
-		ExtentTestManager.startTest("Login and verify the page title");
+		ExtentTestManager.startTest(mapData.get("TestCaseName").toString(),"Login and verify the page title");
 
 		System.out.println("Firsttestcase:"+mapData.get("TestCaseName"));
 		
