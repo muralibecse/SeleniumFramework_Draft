@@ -4,6 +4,10 @@ import wrappers.WrapperMethods;
 
 public class LoginPage extends WrapperMethods {
 	WebDriver driver ;
+	
+	String txtEmail_XPath = "//input[@formcontrolname='email']";
+	String txtPassword_XPath = "//input[@formcontrolname='password']";
+	String btnLogMeIn_XPath= "//button[contains(text(),'LOG')]";
 
 	public LoginPage(WebDriver driver) {
 		this.driver = driver;
@@ -21,7 +25,7 @@ public class LoginPage extends WrapperMethods {
 	}
 
 	public LoginPage enterMailID(String mailID) {
-		enterTextByXpath("//input[@formcontrolname='email']", "email", "email");
+		enterTextByXpath(txtEmail_XPath, mailID, "email");
 		return this;
 	}
 

@@ -1,41 +1,73 @@
 package wrappers;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.testng.annotations.DataProvider;
 
 public class TestDataProvider {
-	public String[][] getExcelData(String fileName, String sheetName) {
-		String[][] arrayExcelData = null;
+	
+	
+	
+	
+	
+	
+	@DataProvider(name="testdata")
+	public Object[][] dataProviderMethod() throws IOException {
+		System.out.println("data provider loaded");
+		FileInputStream fis = null;
+		XSSFWorkbook wb = null;
+		Object[][] obj = null ;
 		try {
-			FileInputStream fs = new FileInputStream(fileName);
-			XSSFWorkbook wb = new XSSFWorkbook(fs);
-			XSSFSheet sh = wb.getSheet(sheetName);
-
-			int totalNoOfCols = sh.getRow(0).getLastCellNum();
-			int totalNoOfRows = sh.getLastRowNum();
+			File file = new File("./TestData/TestData.xlsx");
+			fis = new FileInputStream(file);
 			
-			arrayExcelData = new String[totalNoOfRows-1][totalNoOfCols];
+			wb = new XSSFWorkbook(fis);
+			XSSFSheet ws = wb.getSheetAt(0);
 			
-			for (int i= 1 ; i < totalNoOfRows; i++) {
-
-				for (int j=0; j < totalNoOfCols; j++) {
-					arrayExcelData[i-1][j] = sh.getRow(i).getCell(j).getStringCellValue();
-				}
-
+			int rowCount = ws.getLastRowNum();
+			int colCount = ws.getRow(0).getLastCellNum();
+			
+			
+			//define a object array
+			
+			obj = new Object[rowCount][1];
+			//define a map
+					
+			for(int i = 0;i<rowCount;i++) {
+				
+				Map<Object,Object> dataMap = new HashMap<Object,Object>();
+				for(int j = 0;j<colCount;j++) {
+					System.out.println(i+ws.getRow(0).getCell(j).toString()+"====="+j+ws.getRow(i+1).getCell(j).toString());
+					dataMap.put(ws.getRow(0).getCell(j).toString(), ws.getRow(i+1).getCell(j).toString());
 			}
+				
+				obj[i][0]=dataMap;
+			}
+			
+	
+			return obj;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			wb.close();
+			fis.close();
+			
 		}
-		return arrayExcelData;
+		return obj;
+		
+		
 	}
+	
 
 }

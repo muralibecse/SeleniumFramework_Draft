@@ -42,8 +42,10 @@ public class WebDriverSetup {
 
 	public static synchronized void quitDriver() {
 		try {
+			if(driver!=null) {
 			driver.quit();
 			driver= null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
