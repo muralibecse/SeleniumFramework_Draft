@@ -17,7 +17,10 @@ public class TestDataProvider {
 	public Object[][] MyDataProvider() throws IOException{
 		return dataProviderMethod("TestData","Sheet1");
 	}
+
 	
+//	[0][0] [0][1] [0][2] - 1 testcase
+//	[1][0] [1][1] [1][2] - 2 testcase
 	
 	
 	

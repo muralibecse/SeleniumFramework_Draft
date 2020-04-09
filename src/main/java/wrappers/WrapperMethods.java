@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -29,9 +30,15 @@ import reporters.ExtentTestManager;
 public class WrapperMethods extends WebDriverSetup{
 
 	public synchronized void launchURL(String url) {
-		driver.get(url);
-		System.out.println("URL with link '"+url+"' has been opened successfully."+Thread.currentThread().getName());
-		Reporter.log("URL with link '"+url+"' has been opened successfully.");
+		try {
+			driver.get(url);
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			System.out.println("URL with link '"+url+"' has been opened successfully."+Thread.currentThread().getName());
+			Reporter.log("URL with link '"+url+"' has been opened successfully.");
+		} catch (Exception e) {
+			Reporter.log("Exception occured during URL launch."+e.getMessage());
+
+		}
 	}
 
 	public synchronized void verifyTitle(String title) {
@@ -47,7 +54,9 @@ public class WrapperMethods extends WebDriverSetup{
 		}catch(Exception e) {
 			ExtentTestManager.getTest().log(LogStatus.FAIL, "Title not verified successfully ."+e.getMessage()+"-");
 			Reporter.log("Page title with name '"+title+"' has not been verified successfully."+e.getMessage());
-			System.out.println(e.getStackTrace());
+			
+		}finally {
+			System.out.println("Finalalyyyyyyyy");
 		}
 	}
 	
@@ -117,6 +126,13 @@ public class WrapperMethods extends WebDriverSetup{
 	public synchronized void enterTextByXpath(String xpath,String data,String objectname) {
 		
 		getWebDriver().findElement(By.xpath(xpath)).sendKeys(data);
+		
+		
+	}
+	
+	public synchronized void clickByXpath(String xpath,String objectname) {
+		
+		getWebDriver().findElement(By.xpath(xpath)).click();
 		
 		
 	}

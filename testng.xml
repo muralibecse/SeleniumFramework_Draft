@@ -6,7 +6,7 @@
 		<listener class-name="wrappers.ImplementListener" />
 	</listeners>
 	
-	<test thread-count="3" parallel="methods" name="Test">
+	<test thread-count="1" parallel="methods" name="Test">
 		<classes>
 	
 			<class name="testcases.MyFirstTestCase" />
