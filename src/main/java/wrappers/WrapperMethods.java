@@ -23,8 +23,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
 
+import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 
+import reporters.ExtentManager;
 import reporters.ExtentTestManager;
 
 public class WrapperMethods extends WebDriverSetup{
@@ -127,20 +129,69 @@ public class WrapperMethods extends WebDriverSetup{
 		return actualImageName;
 	}
 
-
-
 	public synchronized void enterTextByXpath(String xpath,String data,String objectname) {
-
 		getWebDriver().findElement(By.xpath(xpath)).sendKeys(data);
-
-
 	}
-
+	
 	public synchronized void clickByXpath(String xpath,String objectname) {
-
 		getWebDriver().findElement(By.xpath(xpath)).click();
-
-
+	}
+	
+	
+	public synchronized void WebElementClick(String locator,String objectName) {
+		try {
+			String []loc = locator.split("#",2);
+			
+			switch(loc[0].toLowerCase()) {
+			
+			case "id":
+				getWebDriver().findElement(By.id(loc[1])).click();
+				break;
+			case "xpath":
+				getWebDriver().findElement(By.xpath(loc[1])).click();
+				break;
+			case "css":
+				getWebDriver().findElement(By.cssSelector(loc[1])).click();
+				break;
+			case  "name":
+				getWebDriver().findElement(By.name(loc[1])).click();
+				break;
+			default:
+				throw new RuntimeException("Invalid Locator Type."+locator);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Exception:"+e.getMessage());
+		}
+		
+	}
+	
+	
+	public synchronized void WebEditEnterText(String locator,String datatoEnter,String objectName) {
+		try {
+			String []loc = locator.split("#",2);
+			switch(loc[0].toLowerCase()) {
+			
+			case "id":
+				getWebDriver().findElement(By.id(loc[1])).sendKeys(datatoEnter);
+				break;
+			case "xpath":
+				getWebDriver().findElement(By.xpath(loc[1])).sendKeys(datatoEnter);
+				break;
+			case "css":
+				getWebDriver().findElement(By.cssSelector(loc[1])).sendKeys(datatoEnter);
+				break;
+			case  "name":
+				getWebDriver().findElement(By.name(loc[1])).sendKeys(datatoEnter);
+				break;
+			default:
+				throw new RuntimeException("Invalid Locator Type."+locator);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Exception:"+e.getMessage());
+		}
+		
 	}
 
 

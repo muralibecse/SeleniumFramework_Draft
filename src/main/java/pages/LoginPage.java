@@ -8,10 +8,10 @@ import wrappers.WrapperMethods;
 
 public class LoginPage extends WrapperMethods {
 	WebDriver driver ;
-	
-	String txtEmail_XPath = "//input[@formcontrolname='email']";
-	String txtPassword_XPath = "//input[@formcontrolname='password']";
-	String btnLogMeIn = ".//button[contains(text(),'LOG')]";
+	//Format of Location type =>  locatortype:locatorvalue
+	String txtEmail_XPath = "xpath#//input[@formcontrolname='email']";
+	String txtPassword_XPath = "xpath#//input[@formcontrolname='password']";
+	String btnLogMeIn = "xpath#.//button[contains(text(),'LOG')]";
 	
 	@FindBy(xpath = "//input[@formcontrolname='email']")
 	WebElement email;
@@ -33,21 +33,19 @@ public class LoginPage extends WrapperMethods {
 	}
 
 	public LoginPage enterMailID(String mailID) {
-		enterTextByXpath(txtEmail_XPath, mailID, "email");
-	
-		//email.sendKeys(mailID);
+		WebEditEnterText(txtEmail_XPath, mailID, "Email");
 		return this;
 	}
 
 
 	public LoginPage enterPassword(String password) {
-		enterTextByXpath(txtPassword_XPath, password, "password");
+		WebEditEnterText(txtPassword_XPath, password, "password");
 		return this;
 	}
 
 
 	public HomePage LogMeIn() {
-		clickByXpath(btnLogMeIn, "LOGMEIN");
+		WebElementClick(btnLogMeIn, "LOGMEIN");
 		return new HomePage(driver);
 	}
 	
