@@ -41,6 +41,12 @@ public class WrapperMethods extends WebDriverSetup{
 		}
 	}
 
+	/**
+	 * @param window_title
+	 * @author Muralimohan Murugesan
+	 * @category Selenium Reusable
+	 * @description This method takes the input and compares it against the window Title
+	 */
 	public synchronized void verifyTitle(String title) {
 		try {
 			Assert.assertEquals(title,driver.getTitle());
@@ -54,17 +60,17 @@ public class WrapperMethods extends WebDriverSetup{
 		}catch(Exception e) {
 			ExtentTestManager.getTest().log(LogStatus.FAIL, "Title not verified successfully ."+e.getMessage()+"-");
 			Reporter.log("Page title with name '"+title+"' has not been verified successfully."+e.getMessage());
-			
+
 		}finally {
 			System.out.println("Finalalyyyyyyyy");
 		}
 	}
-	
+
 	public WebElement waitForElement(WebDriver driver,long time,WebElement element){
 		WebDriverWait wait = new WebDriverWait(driver, time);
 		return wait.until(ExpectedConditions.elementToBeClickable(element));
 	}
-	
+
 	/*
 	 * public WebElement waitForElementWithPollingInterval(WebDriver driver,long
 	 * time,WebElement element){ WebDriverWait wait = new WebDriverWait(driver,
@@ -120,21 +126,21 @@ public class WrapperMethods extends WebDriverSetup{
 		FileUtils.copyFile(image, destFile);
 		return actualImageName;
 	}
-	
-	
-	
+
+
+
 	public synchronized void enterTextByXpath(String xpath,String data,String objectname) {
-		
+
 		getWebDriver().findElement(By.xpath(xpath)).sendKeys(data);
-		
-		
+
+
 	}
-	
+
 	public synchronized void clickByXpath(String xpath,String objectname) {
-		
+
 		getWebDriver().findElement(By.xpath(xpath)).click();
-		
-		
+
+
 	}
 
 

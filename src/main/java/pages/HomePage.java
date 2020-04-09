@@ -11,10 +11,6 @@ public class HomePage extends WrapperMethods{
 	public HomePage(WebDriver driver) {
 		this.driver = driver;
 	}
-	
-	public HomePage sampleclilck() {
-		
-		return this;
-	}
+
 
 }
