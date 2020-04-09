@@ -3,7 +3,7 @@
 <suite name="Suite">
 <parameter name="browser" value="chrome"/>
 	<listeners>
-		<listener class-name="wrappers.ImplementListener" />
+		<listener class-name="ListenersImpl.ImplementListener" />
 	</listeners>
 	
 	<test thread-count="1" parallel="methods" name="Test">

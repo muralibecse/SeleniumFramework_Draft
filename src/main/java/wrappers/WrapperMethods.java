@@ -187,11 +187,24 @@ public class WrapperMethods extends WebDriverSetup{
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
 			}
+			testReport("Field '"+objectName+"' with value '"+datatoEnter+"' has been entered successfully","PASS");
 		} catch (Exception e) {
+			testReport("Field '"+objectName+"' with value '"+datatoEnter+"' is not able to enter","FAIL");
 			// TODO Auto-generated catch block
 			System.out.println("Exception:"+e.getMessage());
 		}
 		
+	}
+	
+	
+	public synchronized void testReport(String log,String status) {
+		if(status.equalsIgnoreCase("pass")) {
+		ExtentTestManager.getTest().log(LogStatus.PASS, log);
+		}else if(status.equalsIgnoreCase("fail")){
+			ExtentTestManager.getTest().log(LogStatus.FAIL, log);
+		}else {
+			ExtentTestManager.getTest().log(LogStatus.INFO, log);
+		}
 	}
 
 

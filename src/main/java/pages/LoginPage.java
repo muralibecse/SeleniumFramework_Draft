@@ -1,4 +1,6 @@
 package pages;
+import java.io.IOException;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,7 +18,7 @@ public class LoginPage extends WrapperMethods {
 	@FindBy(xpath = "//input[@formcontrolname='email']")
 	WebElement email;
 
-	public LoginPage(WebDriver driver) {
+	public LoginPage(WebDriver driver) throws IOException{
 		this.driver = driver;
 		//PageFactory.initElements(driver, this);
 	}
@@ -44,7 +46,7 @@ public class LoginPage extends WrapperMethods {
 	}
 
 
-	public HomePage LogMeIn() {
+	public HomePage LogMeIn() throws IOException {
 		WebElementClick(btnLogMeIn, "LOGMEIN");
 		return new HomePage(driver);
 	}

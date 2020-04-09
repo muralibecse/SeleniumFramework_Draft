@@ -1,23 +1,24 @@
 package testcases;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import ListenersImpl.ImplementListener;
 import pages.LoginPage;
 //import pages.LoginPage;
 import reporters.ExtentTestManager;
-import wrappers.ImplementListener;
 import wrappers.TestDataProvider;
 import wrappers.WebDriverSetup;
 
 public class MyFirstTestCase_Murali extends ImplementListener {
 
-	String url = WebDriverSetup.config_prop.getProperty("app_url");
 
 	@Test(dataProvider = "testdata", dataProviderClass = TestDataProvider.class)
-	public void TC_Chopras_CreateStudentProfile(Map<Object, Object> mapData) {
+	public void TC_Chopras_CreateStudentProfile(Map<Object, Object> mapData) throws IOException {
+		String url = WebDriverSetup.config_prop.getProperty("app_url");
 
 		ExtentTestManager.startTest(mapData.get("TestCaseName").toString(), "Login and verify the page title");
 
