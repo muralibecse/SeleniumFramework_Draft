@@ -10,12 +10,12 @@ import pages.LoginPage;
 import reporters.ExtentTestManager;
 import wrappers.ImplementListener;
 import wrappers.TestDataProvider;
+import wrappers.WebDriverSetup;
 
 public class MyFirstTestCase extends ImplementListener{
 
-	String url = "https://auspost.com.au/";
-	String test = "";
-
+	String url = WebDriverSetup.config_prop.getProperty("app_url");
+	
 	@Test(dataProvider = "testdata" ,dataProviderClass = TestDataProvider.class )
 	public void myFirstTest(Map<Object, Object> mapData) {
 

@@ -1,4 +1,6 @@
 package wrappers;
+import java.io.IOException;
+
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +19,13 @@ public class ImplementListener implements ITestListener	{
 
 	public ImplementListener() {
 		System.out.println("ImplementListener loaded::::"+Thread.currentThread().getStackTrace()[3].getMethodName());
+	
+		try {
+			WrapperMethods.loadConfigurationfiles();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
