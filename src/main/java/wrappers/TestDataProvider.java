@@ -20,6 +20,8 @@ public class TestDataProvider {
 		return dataProviderMethod("TestData","Sheet1");
 	}
 
+	
+	
 	public Object[][] dataProviderMethod(String ExcelName,String SheetName) throws IOException {
 		System.out.println("data provider loaded");
 		FileInputStream fis = null;
