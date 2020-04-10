@@ -17,6 +17,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -37,7 +38,11 @@ public class WrapperMethods extends WebDriverSetup{
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			System.out.println("URL with link '"+url+"' has been opened successfully."+Thread.currentThread().getName());
 			Reporter.log("URL with link '"+url+"' has been opened successfully.");
-		} catch (Exception e) {
+			testReport("URL with link '"+url+"' has been opened successfully.", "PASS");
+		}catch(WebDriverException we) {
+			testReport("URL with link '"+url+"' has been opened successfully."+we.getMessage(), "FAIL");
+		}
+		catch (Exception e) {
 			Reporter.log("Exception occured during URL launch."+e.getMessage());
 
 		}
@@ -53,11 +58,9 @@ public class WrapperMethods extends WebDriverSetup{
 		try {
 			Assert.assertEquals(title,driver.getTitle());
 			Reporter.log("Page title with name '"+title+"' has been verified successfully.");
-			ExtentTestManager.getTest().log(LogStatus.PASS, "Title verified successfully ."+title);
+			ExtentTestManager.getTest().log(LogStatus.PASS, "Title verified successfully ."+title+attachScreenshot());
 		}catch(AssertionError e) {
-			String base64Screenshot = "data:image/png;base64," + ((TakesScreenshot) driver).
-					getScreenshotAs(OutputType.BASE64);
-			ExtentTestManager.getTest().log(LogStatus.FAIL, "Title not verified successfully ."+e.getMessage()+"."+ExtentTestManager.getTest().addBase64ScreenShot(base64Screenshot));
+			ExtentTestManager.getTest().log(LogStatus.FAIL, "Title not verified successfully ."+e.getMessage()+"."+attachScreenshot());
 			System.out.println(e.getMessage());
 		}catch(Exception e) {
 			ExtentTestManager.getTest().log(LogStatus.FAIL, "Title not verified successfully ."+e.getMessage()+"-");
@@ -68,6 +71,13 @@ public class WrapperMethods extends WebDriverSetup{
 		}
 	}
 
+	public String attachScreenshot() {
+		String base64Screenshot = "data:image/png;base64," + ((TakesScreenshot) driver).
+				getScreenshotAs(OutputType.BASE64);
+		return ExtentTestManager.getTest().addBase64ScreenShot(base64Screenshot);
+
+	}
+	
 	public WebElement waitForElement(WebDriver driver,long time,WebElement element){
 		WebDriverWait wait = new WebDriverWait(driver, time);
 		return wait.until(ExpectedConditions.elementToBeClickable(element));

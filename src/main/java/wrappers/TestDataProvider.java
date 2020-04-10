@@ -12,22 +12,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.DataProvider;
 
 public class TestDataProvider {
+	
+	 String TestData = null;
 
 	@DataProvider(name="testdata")
 	public Object[][] MyDataProvider() throws IOException{
 		return dataProviderMethod("TestData","Sheet1");
 	}
-
-
-	//	[0][0] [0][1] [0][2] - 1 testcase
-	//	[1][0] [1][1] [1][2] - 2 testcase
-
-
-
-
-
-
-
 
 	public Object[][] dataProviderMethod(String ExcelName,String SheetName) throws IOException {
 		System.out.println("data provider loaded");

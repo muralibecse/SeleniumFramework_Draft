@@ -13,6 +13,12 @@ public class HomePage extends WrapperMethods{
 	public HomePage(WebDriver driver) throws IOException {
 		this.driver = driver;
 	}
+	
+	public HomePage VerifyThePageTitle(String title) {
+		
+		
+		return this;
+	}
 
 
 }

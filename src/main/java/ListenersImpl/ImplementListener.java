@@ -19,14 +19,17 @@ import wrappers.WrapperMethods;
 
 public class ImplementListener implements ITestListener	{
 
-	/*
-	 * public ImplementListener() {
-	 * System.out.println("ImplementListener loaded::::"+Thread.currentThread().
-	 * getStackTrace()[3].getMethodName());
-	 * 
-	 * try { WrapperMethods.loadConfigurationfiles(); } catch (IOException e) { //
-	 * TODO Auto-generated catch block e.printStackTrace(); } }
-	 */
+	public ImplementListener() {
+		System.out.println("ImplementListener loaded::::"+Thread.currentThread().getStackTrace()[3].getMethodName());
+	
+		try {
+			WrapperMethods.loadConfigurationfiles();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 
 	public void onFinish(ITestContext iTestContext) {					
 		try {

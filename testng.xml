@@ -9,7 +9,7 @@
 	<test thread-count="1" parallel="methods" name="Test">
 		<classes>
 	
-			<class name="testcases.MyFirstTestCase" />
+			<class name="testcases.MyFirstTestCase_Murali" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
