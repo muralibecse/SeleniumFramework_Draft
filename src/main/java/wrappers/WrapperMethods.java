@@ -269,7 +269,6 @@ public class WrapperMethods extends WebDriverSetup{
 			String []loc = locator.split("#",2);
 			
 			switch(loc[0].toLowerCase()) {
-			
 			case "id":
 				element = getWebDriver().findElement(By.id(loc[1]));
 				break;
