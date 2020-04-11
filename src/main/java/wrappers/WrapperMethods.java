@@ -285,7 +285,6 @@ public class WrapperMethods extends WebDriverSetup{
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
 			}
-			
 			JavascriptExecutor js = (JavascriptExecutor) driver;  
 			js.executeScript("arguments[0].click();",element);
 		} catch (Exception e) {
