@@ -6,6 +6,7 @@ import java.util.Map;
 import org.testng.SkipException;
 import org.testng.TestNG;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import ListenersImpl.ImplementListener;
@@ -17,10 +18,10 @@ import wrappers.WebDriverSetup;
 
 public class TCG_Cz_StudentCreationProfile extends ImplementListener {
 	
-	
+	@BeforeClass
 	public void setTestCaseData() {
 		
-		
+		TestDataProvider.SetTestData("TestData");
 		
 	}
 
@@ -36,7 +37,8 @@ public class TCG_Cz_StudentCreationProfile extends ImplementListener {
 		t1.enterMailID(mapData.get("Email").toString())
 		.enterPassword(mapData.get("Password").toString())
 		.LogMeIn()
-		.verifyTitle("TC Global");;
+		.AddProfileDetails()
+		.SelectDate("22","October","1995");
 	
 		ExtentTestManager.endTest();
 		//***********************************************************************************************************************************

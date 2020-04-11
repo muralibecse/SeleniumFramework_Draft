@@ -14,11 +14,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -31,10 +35,15 @@ import reporters.ExtentManager;
 import reporters.ExtentTestManager;
 
 public class WrapperMethods extends WebDriverSetup{
+	
+	
+	static WebDriverWait wait;
+	static WebDriver jsWaitDriver;
 
 	public synchronized void launchURL(String url) {
 		try {
 			driver.get(url);
+			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			System.out.println("URL with link '"+url+"' has been opened successfully."+Thread.currentThread().getName());
 			Reporter.log("URL with link '"+url+"' has been opened successfully.");
@@ -171,6 +180,7 @@ public class WrapperMethods extends WebDriverSetup{
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.getStackTrace();
 			System.out.println("Exception:"+e.getMessage());
 		}
 		
@@ -206,6 +216,10 @@ public class WrapperMethods extends WebDriverSetup{
 		
 	}
 	
+	public synchronized void clickBy(String xpath,String objectname) {
+		getWebDriver().findElement(By.xpath(xpath)).click();
+	}
+	
 	
 	public synchronized void testReport(String log,String status) {
 		if(status.equalsIgnoreCase("pass")) {
@@ -216,6 +230,134 @@ public class WrapperMethods extends WebDriverSetup{
 			ExtentTestManager.getTest().log(LogStatus.INFO, log);
 		}
 	}
+	
+	public synchronized void WebElementClickByAction(String locator,String objectName) {
+		try {
+			
+			Actions action  = new Actions(getWebDriver());
+			String []loc = locator.split("#",2);
+			
+			switch(loc[0].toLowerCase()) {
+			
+			case "id":
+				action.click(getWebDriver().findElement(By.id(loc[1]))).build().perform();;
+				break;
+			case "xpath":
+				action.click(getWebDriver().findElement(By.xpath(loc[1]))).build().perform();
+				break;
+			case "css":
+				action.click(getWebDriver().findElement(By.cssSelector(loc[1])));
+				break;
+			case  "name":
+				action.click(getWebDriver().findElement(By.name(loc[1]))).build().perform();
+				break;
+			default:
+				throw new RuntimeException("Invalid Locator Type."+locator);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.getStackTrace();
+			System.out.println("Exception:"+e.getMessage());
+		}
+		
+	}
+	
+	public void clickByJScriptExecutor(String locator,String objectName) {
+		WebElement element = null;
+		
+		try {
+			String []loc = locator.split("#",2);
+			
+			switch(loc[0].toLowerCase()) {
+			
+			case "id":
+				element = getWebDriver().findElement(By.id(loc[1]));
+				break;
+			case "xpath":
+				element = getWebDriver().findElement(By.xpath(loc[1]));
+				break;
+			case "css":
+				element = getWebDriver().findElement(By.cssSelector(loc[1]));
+				break;
+			case  "name":
+				element = getWebDriver().findElement(By.name(loc[1]));
+				break;
+			default:
+				throw new RuntimeException("Invalid Locator Type."+locator);
+			}
+			
+			JavascriptExecutor js = (JavascriptExecutor) driver;  
+			js.executeScript("arguments[0].click();",element);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void tcgSelectDropdown(String strLabelReference,String strFormControlName,String strValuetoselect,String objectName) {
+		
+		WebElementClick("xpath#(.//label[text()='"+strLabelReference+"']//following::mat-select[@formcontrolname='"+strFormControlName+"'])[1]", strFormControlName);
+		waitForJQueryLoad();
+		ScrollIntoElement("xpath#//mat-option//span[normalize-space(text())='"+strValuetoselect+"']",strValuetoselect);
+		WebElementClick("xpath#//mat-option//span[normalize-space(text())='"+strValuetoselect+"']","Value Selected - "+strValuetoselect);
+	}
+	
+	
+	public void ScrollIntoElement(String locator,String objectName) {
+		WebElement element = null;
+		try {
+			String []loc = locator.split("#",2);
+			switch(loc[0].toLowerCase()) {
+			case "id":
+				element = getWebDriver().findElement(By.id(loc[1]));
+				break;
+			case "xpath":
+				element = getWebDriver().findElement(By.xpath(loc[1]));
+				break;
+			case "css":
+				element = getWebDriver().findElement(By.cssSelector(loc[1]));
+				break;
+			case  "name":
+				element = getWebDriver().findElement(By.name(loc[1]));
+				break;
+			default:
+				throw new RuntimeException("Invalid Locator Type."+locator);
+			}
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+
+	//***************************ANGULAR JS WRAPPER METHODS***************************************************//
+	
+   public void waitForJQueryLoad() {
+	   JavascriptExecutor jsExec = (JavascriptExecutor) driver;  
+        try {
+        	wait = new WebDriverWait(driver,30);
+			  ExpectedCondition<Boolean> jQueryLoad = driver -> ((Long)
+			  ((JavascriptExecutor) driver) .executeScript("return jQuery.active") == 0);
+			 
+            boolean jqueryReady = (Boolean) jsExec.executeScript("return jQuery.active==0");
+ 
+            if (!jqueryReady) {
+                wait.until(jQueryLoad);
+            }
+        } catch (WebDriverException ignored) {
+        	System.out.println("Exception in waitForJQueryLoad:"+ignored.getMessage());
+        }catch(Exception e) {
+        	System.out.println("Exception in waitForJQueryLoad:"+e.getMessage());
+
+        }
+    }
+   
+   
+	//***************************ANGULAR JS WRAPPER METHODS***************************************************//
 
 
 }

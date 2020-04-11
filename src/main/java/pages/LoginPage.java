@@ -6,17 +6,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import PageObjects.LoginPageObjects;
 import wrappers.WrapperMethods;
 
-public class LoginPage extends WrapperMethods {
+public class LoginPage extends WrapperMethods implements LoginPageObjects {
 	WebDriver driver ;
-	//Format of Location type =>  locatortype:locatorvalue
-	String txtEmail_XPath = "xpath#//input[@formcontrolname='email']";
-	String txtPassword_XPath = "xpath#//input[@formcontrolname='password']";
-	String btnLogMeIn = "xpath#.//button[contains(text(),'LOG')]";
-	
-	@FindBy(xpath = "//input[@formcontrolname='email']")
-	WebElement email;
 
 	public LoginPage(WebDriver driver) throws IOException{
 		this.driver = driver;
@@ -47,15 +41,22 @@ public class LoginPage extends WrapperMethods {
 
 
 	public HomePage LogMeIn() throws IOException {
-		WebElementClick(btnLogMeIn, "LOGMEIN");
+		try {
+			waitForJQueryLoad();
+			clickByJScriptExecutor(btnLogMeIn, "LOG ME IN");
+			waitForJQueryLoad();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return new HomePage(driver);
 	}
-	
+
 	public LoginPage DontHaveAnAccountLink(String mailID) {
 
 		return this;
 	}
-	
+
 
 
 }

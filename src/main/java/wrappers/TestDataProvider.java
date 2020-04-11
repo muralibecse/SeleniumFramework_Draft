@@ -9,15 +9,21 @@ import java.util.Map;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
 public class TestDataProvider {
 	
-	 String TestData = null;
-
+	
+	static String TestData = null;
+	
+	public static void SetTestData(String testdata) {
+		TestData=testdata;
+	}
+	
 	@DataProvider(name="testdata")
 	public Object[][] MyDataProvider() throws IOException{
-		return dataProviderMethod("TestData","Sheet1");
+		return dataProviderMethod(TestData,"Sheet1");
 	}
 
 	
