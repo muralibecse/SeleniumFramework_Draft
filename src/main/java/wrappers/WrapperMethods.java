@@ -17,6 +17,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -39,10 +40,13 @@ public class WrapperMethods extends WebDriverSetup{
 	
 	static WebDriverWait wait;
 	static WebDriver jsWaitDriver;
-
+	static WebDriver driver;
 	public synchronized void launchURL(String url) {
 		try {
+			driver = getDriver() ;
+		//	driver = WebDriverSetup.getWebDriver();
 			driver.get(url);
+			driver.manage().window().maximize();
 			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			System.out.println("URL with link '"+url+"' has been opened successfully."+Thread.currentThread().getName());
@@ -87,7 +91,7 @@ public class WrapperMethods extends WebDriverSetup{
 
 	}
 	
-	public WebElement waitForElement(WebDriver driver,long time,WebElement element){
+	public synchronized WebElement waitForElement(WebDriver driver,long time,WebElement element){
 		WebDriverWait wait = new WebDriverWait(driver, time);
 		return wait.until(ExpectedConditions.elementToBeClickable(element));
 	}
@@ -149,11 +153,11 @@ public class WrapperMethods extends WebDriverSetup{
 	}
 
 	public synchronized void enterTextByXpath(String xpath,String data,String objectname) {
-		getWebDriver().findElement(By.xpath(xpath)).sendKeys(data);
+		getDriver().findElement(By.xpath(xpath)).sendKeys(data);
 	}
 	
 	public synchronized void clickByXpath(String xpath,String objectname) {
-		getWebDriver().findElement(By.xpath(xpath)).click();
+		getDriver().findElement(By.xpath(xpath)).click();
 	}
 	
 	
@@ -164,24 +168,37 @@ public class WrapperMethods extends WebDriverSetup{
 			switch(loc[0].toLowerCase()) {
 			
 			case "id":
-				getWebDriver().findElement(By.id(loc[1])).click();
+				getDriver().findElement(By.id(loc[1])).click();
 				break;
 			case "xpath":
-				getWebDriver().findElement(By.xpath(loc[1])).click();
+				getDriver().findElement(By.xpath(loc[1])).click();
 				break;
 			case "css":
-				getWebDriver().findElement(By.cssSelector(loc[1])).click();
+				getDriver().findElement(By.cssSelector(loc[1])).click();
 				break;
 			case  "name":
-				getWebDriver().findElement(By.name(loc[1])).click();
+				getDriver().findElement(By.name(loc[1])).click();
 				break;
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.getStackTrace();
+			
+			testReport("Element with name '"+objectName+"' has been clicked successfully.", "PASS");
+		}catch(StaleElementReferenceException stale) {
+			System.out.println("StaleL:Webelement click:"+stale.getMessage());
+			WebElementClick(locator,objectName);
+			
+		}catch (Exception e) {
+			testReport("Element with name '"+objectName+"' not able to click successfully.", "FAIL");
+
+		// TODO Auto-generated catch block
+			
+			if(e.getMessage().contains("Other element would receive the click")) {
+				WebElementClick(locator,objectName);
+
+			}else {
 			System.out.println("Exception:"+e.getMessage());
+			}
 		}
 		
 	}
@@ -193,16 +210,16 @@ public class WrapperMethods extends WebDriverSetup{
 			switch(loc[0].toLowerCase()) {
 			
 			case "id":
-				getWebDriver().findElement(By.id(loc[1])).sendKeys(datatoEnter);
+				getDriver().findElement(By.id(loc[1])).sendKeys(datatoEnter);
 				break;
 			case "xpath":
-				getWebDriver().findElement(By.xpath(loc[1])).sendKeys(datatoEnter);
+				getDriver().findElement(By.xpath(loc[1])).sendKeys(datatoEnter);
 				break;
 			case "css":
-				getWebDriver().findElement(By.cssSelector(loc[1])).sendKeys(datatoEnter);
+				getDriver().findElement(By.cssSelector(loc[1])).sendKeys(datatoEnter);
 				break;
 			case  "name":
-				getWebDriver().findElement(By.name(loc[1])).sendKeys(datatoEnter);
+				getDriver().findElement(By.name(loc[1])).sendKeys(datatoEnter);
 				break;
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
@@ -217,15 +234,15 @@ public class WrapperMethods extends WebDriverSetup{
 	}
 	
 	public synchronized void clickBy(String xpath,String objectname) {
-		getWebDriver().findElement(By.xpath(xpath)).click();
+		getDriver().findElement(By.xpath(xpath)).click();
 	}
 	
 	
 	public synchronized void testReport(String log,String status) {
 		if(status.equalsIgnoreCase("pass")) {
-		ExtentTestManager.getTest().log(LogStatus.PASS, log);
+		ExtentTestManager.getTest().log(LogStatus.PASS, log+attachScreenshot());
 		}else if(status.equalsIgnoreCase("fail")){
-			ExtentTestManager.getTest().log(LogStatus.FAIL, log);
+			ExtentTestManager.getTest().log(LogStatus.FAIL, log+attachScreenshot());
 		}else {
 			ExtentTestManager.getTest().log(LogStatus.INFO, log);
 		}
@@ -234,22 +251,20 @@ public class WrapperMethods extends WebDriverSetup{
 	public synchronized void WebElementClickByAction(String locator,String objectName) {
 		try {
 			
-			Actions action  = new Actions(getWebDriver());
+			Actions action  = new Actions(getDriver());
 			String []loc = locator.split("#",2);
-			
 			switch(loc[0].toLowerCase()) {
-			
 			case "id":
-				action.click(getWebDriver().findElement(By.id(loc[1]))).build().perform();;
+				action.click(getDriver().findElement(By.id(loc[1]))).build().perform();;
 				break;
 			case "xpath":
-				action.click(getWebDriver().findElement(By.xpath(loc[1]))).build().perform();
+				action.click(getDriver().findElement(By.xpath(loc[1]))).build().perform();
 				break;
 			case "css":
-				action.click(getWebDriver().findElement(By.cssSelector(loc[1])));
+				action.click(getDriver().findElement(By.cssSelector(loc[1])));
 				break;
 			case  "name":
-				action.click(getWebDriver().findElement(By.name(loc[1]))).build().perform();
+				action.click(getDriver().findElement(By.name(loc[1]))).build().perform();
 				break;
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
@@ -262,7 +277,7 @@ public class WrapperMethods extends WebDriverSetup{
 		
 	}
 	
-	public void clickByJScriptExecutor(String locator,String objectName) {
+	public synchronized void clickByJScriptExecutor(String locator,String objectName) {
 		WebElement element = null;
 		
 		try {
@@ -270,35 +285,40 @@ public class WrapperMethods extends WebDriverSetup{
 			
 			switch(loc[0].toLowerCase()) {
 			case "id":
-				element = getWebDriver().findElement(By.id(loc[1]));
+				element = getDriver().findElement(By.id(loc[1]));
 				break;
 			case "xpath":
-				element = getWebDriver().findElement(By.xpath(loc[1]));
+				element = getDriver().findElement(By.xpath(loc[1]));
 				break;
 			case "css":
-				element = getWebDriver().findElement(By.cssSelector(loc[1]));
+				element = getDriver().findElement(By.cssSelector(loc[1]));
 				break;
 			case  "name":
-				element = getWebDriver().findElement(By.name(loc[1]));
+				element = getDriver().findElement(By.name(loc[1]));
 				break;
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
 			}
-			JavascriptExecutor js = (JavascriptExecutor) driver;  
+			JavascriptExecutor js = (JavascriptExecutor) getDriver();  
 			js.executeScript("arguments[0].click();",element);
-		} catch (Exception e) {
+			testReport("Element with name '"+objectName+"' has been clicked successfully.", "PASS");
+		}catch(StaleElementReferenceException e) {
+			clickByJScriptExecutor( locator, objectName) ;
+		}
+		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			testReport("Element with name '"+objectName+"' not able click successfully."+e.getMessage(), "FAIL");
+
 		}
 		
 	}
 	
 	
-	public void tcgSelectDropdown(String strLabelReference,String strFormControlName,String strValuetoselect,String objectName) {
+	public synchronized void tcgSelectDropdown(String strLabelReference,String strFormControlName,String strValuetoselect,String objectName) {
 		
 		WebElementClick("xpath#(.//label[text()='"+strLabelReference+"']//following::mat-select[@formcontrolname='"+strFormControlName+"'])[1]", strFormControlName);
-		waitForJQueryLoad();
 		ScrollIntoElement("xpath#//mat-option//span[normalize-space(text())='"+strValuetoselect+"']",strValuetoselect);
+		poll(2000);
 		WebElementClick("xpath#//mat-option//span[normalize-space(text())='"+strValuetoselect+"']","Value Selected - "+strValuetoselect);
 	}
 	
@@ -309,16 +329,16 @@ public class WrapperMethods extends WebDriverSetup{
 			String []loc = locator.split("#",2);
 			switch(loc[0].toLowerCase()) {
 			case "id":
-				element = getWebDriver().findElement(By.id(loc[1]));
+				element = getDriver().findElement(By.id(loc[1]));
 				break;
 			case "xpath":
-				element = getWebDriver().findElement(By.xpath(loc[1]));
+				element = getDriver().findElement(By.xpath(loc[1]));
 				break;
 			case "css":
-				element = getWebDriver().findElement(By.cssSelector(loc[1]));
+				element = getDriver().findElement(By.cssSelector(loc[1]));
 				break;
 			case  "name":
-				element = getWebDriver().findElement(By.name(loc[1]));
+				element =getDriver().findElement(By.name(loc[1]));
 				break;
 			default:
 				throw new RuntimeException("Invalid Locator Type."+locator);
@@ -326,7 +346,7 @@ public class WrapperMethods extends WebDriverSetup{
 			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
 		
 	}
@@ -334,27 +354,149 @@ public class WrapperMethods extends WebDriverSetup{
 
 	//***************************ANGULAR JS WRAPPER METHODS***************************************************//
 	
-   public void waitForJQueryLoad() {
-	   JavascriptExecutor jsExec = (JavascriptExecutor) driver;  
-        try {
-        	wait = new WebDriverWait(driver,30);
-			  ExpectedCondition<Boolean> jQueryLoad = driver -> ((Long)
-			  ((JavascriptExecutor) driver) .executeScript("return jQuery.active") == 0);
-			 
-            boolean jqueryReady = (Boolean) jsExec.executeScript("return jQuery.active==0");
- 
-            if (!jqueryReady) {
-                wait.until(jQueryLoad);
-            }
-        } catch (WebDriverException ignored) {
-        	System.out.println("Exception in waitForJQueryLoad:"+ignored.getMessage());
-        }catch(Exception e) {
-        	System.out.println("Exception in waitForJQueryLoad:"+e.getMessage());
+	/*
+	 * public synchronized void waitForJQueryLoad() { JavascriptExecutor jsExec =
+	 * (JavascriptExecutor) getDriver(); WebDriverWait jsWait=new
+	 * WebDriverWait(getDriver(), 10);;
+	 * 
+	 * try { jsWait = new WebDriverWait(getDriver(),30); ExpectedCondition<Boolean>
+	 * jQueryLoad = driver -> ((Long) jsExec .executeScript("return jQuery.active")
+	 * == 0);
+	 * 
+	 * boolean jqueryReady = (Boolean)
+	 * jsExec.executeScript("return jQuery.active==0");
+	 * 
+	 * if (!jqueryReady) { jsWait.until(jQueryLoad); } } catch (WebDriverException
+	 * ignored) {
+	 * System.out.println("Exception in waitForJQueryLoad:"+ignored.getMessage());
+	 * }catch(Exception e) {
+	 * System.out.println("Exception in waitForJQueryLoad:"+e.getMessage());
+	 * 
+	 * } }
+	 */
+   
+   public void waitUntilAngular5Ready() {
+	   JavascriptExecutor jsExec = (JavascriptExecutor) getDriver();  
 
-        }
-    }
+       try {
+           Object angular5Check = jsExec.executeScript("return getAllAngularRootElements()[0].attributes['ng-version']");
+           if (angular5Check != null) {
+               Boolean angularPageLoaded = (Boolean) jsExec.executeScript("return window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1");
+               if (!angularPageLoaded) {
+                   poll(20);
+
+                   waitForAngular5Load();
+
+                   poll(20);
+               }
+           }
+       } catch (WebDriverException ignored) {
+       }
+   }
+
+   private void poll(long milis) {
+       try {
+           Thread.sleep(milis);
+       } catch (InterruptedException e) {
+           e.printStackTrace();
+       }
+   }
    
+   private void waitForAngular5Load() {
+       String angularReadyScript = "return window.getAllAngularTestabilities().findIndex(x=>!x.isStable()) === -1";
+       angularLoads(angularReadyScript);
+   }
    
+   private void angularLoads(String angularReadyScript) {
+	   WebDriverWait jsWait=new WebDriverWait(getDriver(), 10);;
+	   JavascriptExecutor jsExec = (JavascriptExecutor) getDriver();  
+
+       try {
+           ExpectedCondition<Boolean> angularLoad = driver -> Boolean.valueOf(((JavascriptExecutor) getDriver())
+               .executeScript(angularReadyScript).toString());
+
+           boolean angularReady = Boolean.valueOf(jsExec.executeScript(angularReadyScript).toString());
+
+           if (!angularReady) {
+               jsWait.until(angularLoad);
+           }
+       } catch (WebDriverException ignored) {
+       }
+   }
+   
+   private void waitUntilJSReady() {
+ 	   WebDriverWait jsWait=new WebDriverWait(getDriver() , 10);
+
+	   JavascriptExecutor jsExec = (JavascriptExecutor) getDriver() ;  
+       try {
+   
+
+           ExpectedCondition<Boolean> jsLoad = driver -> ((JavascriptExecutor) jsWait)
+               .executeScript("return document.readyState").toString().equals("complete");
+
+           boolean jsReady = jsExec.executeScript("return document.readyState").toString().equals("complete");
+
+           if (!jsReady) {
+               jsWait.until(jsLoad);
+           }
+       } catch (WebDriverException ignored) {
+       }
+   }
+   
+   private void ajaxComplete() {
+	   JavascriptExecutor jsExec = (JavascriptExecutor) getDriver() ;  
+
+       jsExec.executeScript("var callback = arguments[arguments.length - 1];"
+           + "var xhr = new XMLHttpRequest();" + "xhr.open('GET', '/Ajax_call', true);"
+           + "xhr.onreadystatechange = function() {" + "  if (xhr.readyState == 4) {"
+           + "    callback(xhr.responseText);" + "  }" + "};" + "xhr.send();");
+   }
+   
+	/*
+	 * private void waitUntilJQueryReady() { JavascriptExecutor jsExec =
+	 * (JavascriptExecutor) getDriver() ;
+	 * 
+	 * Boolean jQueryDefined = (Boolean)
+	 * jsExec.executeScript("return typeof jQuery != 'undefined'"); if
+	 * (jQueryDefined) { poll(20);
+	 * 
+	 * waitForJQueryLoad();
+	 * 
+	 * poll(20); } }
+	 */
+   
+   public void waitUntilAngularReady() {
+	   JavascriptExecutor jsExec = (JavascriptExecutor) getDriver() ;  
+
+       try {
+           Boolean angularUnDefined = (Boolean) jsExec.executeScript("return window.angular === undefined");
+           if (!angularUnDefined) {
+               Boolean angularInjectorUnDefined = (Boolean) jsExec.executeScript("return angular.element(document).injector() === undefined");
+               if (!angularInjectorUnDefined) {
+                   poll(20);
+
+                   waitForAngularLoad();
+
+                   poll(20);
+               }
+           }
+       } catch (WebDriverException ignored) {
+       }
+   }
+   
+   private void waitForAngularLoad() {
+       String angularReadyScript = "return angular.element(document).injector().get('$http').pendingRequests.length === 0";
+       angularLoads(angularReadyScript);
+   }
+
+
+   public void waitAllRequest() {
+       waitUntilJSReady();
+       ajaxComplete();
+      // waitUntilJQueryReady();
+       waitUntilAngularReady();
+       waitUntilAngular5Ready();
+   }
 	//***************************ANGULAR JS WRAPPER METHODS***************************************************//
 
 

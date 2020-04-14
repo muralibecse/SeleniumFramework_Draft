@@ -41,14 +41,8 @@ public class LoginPage extends WrapperMethods implements LoginPageObjects {
 
 
 	public HomePage LogMeIn() throws IOException {
-		try {
-			waitForJQueryLoad();
-			clickByJScriptExecutor(btnLogMeIn, "LOG ME IN");
-			waitForJQueryLoad();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+     		clickByJScriptExecutor(btnLogMeIn, "LOG ME IN");
+			waitAllRequest();
 		return new HomePage(driver);
 	}
 

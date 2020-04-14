@@ -24,7 +24,7 @@ public class HomePage extends WrapperMethods implements HomePageObjects{
 	
 	public HomePage AddProfileDetails() {
 		WebElementClick(btnAddProfileDetails,"Add Profile details");
-		waitForJQueryLoad();
+		//waitForJQueryLoad();
 		return this;
 	}
 	
