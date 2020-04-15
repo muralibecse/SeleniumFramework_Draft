@@ -329,7 +329,9 @@ public class WrapperMethods extends WebDriverSetup{
 		WebElementClick("xpath#(//label[text()='Marital Status'])[1]//following-sibling::div//input[@value='"+strmaritalstatus+"']", "Martial status selected -"+strmaritalstatus);	
 	}
 	
-	
+	public void strSelectStatus(String labelName,String strStatus) {
+		WebElementClick("xpath#(//label[text()='"+labelName+"'])[1]//following-sibling::div//input[@value='"+strStatus+"']", labelName+"-"+strStatus);
+	}
 	
 	public void strSelectLabel(String strLabelReference, String strLabeltoSelect, String objectname) {
 		WebElementClick("xpath#(//span[(text()='"+strLabelReference+"')]//following::label[(text()='"+strLabeltoSelect+"')])[1]", "Label selected is -"+strLabeltoSelect);	

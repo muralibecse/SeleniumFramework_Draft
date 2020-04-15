@@ -16,15 +16,15 @@ public interface HomePageObjects {
 	
 	//'***********************        Education & Work - Sai Sankar  D     ***********************
 	
-		String sectionEducationAndWork = "xpath#//span[text()='Education & Work']";
-		String subsecEducationSummary  = "xpath#//span[contains(text(),' Education summary')][1]";
-		String drpHighestLevelofEducation = "xpath#(//span[contains(text(),'- Education summary')]//following::input[@formcontrolname='country'])[1]";
-		String drpCountryofEducation = "xpath#//span[text()='Education & Work']";
-		String txtInstituteName = "xpath#//span[text()='Education & Work']";
-		String drpStudyArea = "xpath#//span[text()='Education & Work']";
-		String drpCourseName = "xpath#//span[text()='Education & Work']";
-		String radioStatus = "xpath#//span[text()='Education & Work']";
-		String btnEASave = "xpath#//span[text()='Save'])[1]";
+	String sectionEducationAndWork = "xpath#//span[text()='Education & Work']";
+	String subsecEducationSummary  = "xpath#//span[contains(text(),' Education summary')][1]";
+	String drpHighestLevelofEducation = "xpath#(//span[contains(text(),'- Education summary')]//following::input[@formcontrolname='country'])[1]";
+	String drpCountryofEducation = "xpath#//span[text()='Education & Work']";
+	String txtInstituteName = "xpath#//span[text()='Education & Work']";
+	String drpStudyArea = "xpath#//span[text()='Education & Work']";
+	String drpCourseName = "xpath#//span[text()='Education & Work']";
+	String radioStatus = "xpath#//span[text()='Education & Work']";
+	String btnEASave = "xpath#//span[text()='Save'])[1]";
 				
 	//********************************************************************************************
 

@@ -111,52 +111,52 @@ public class HomePage extends WrapperMethods implements HomePageObjects{
 	
 	//'***********************        Education & Work - Sai Sankar D      ***********************
 	
-			public HomePage EducationAndWork() {
-				WebElementClick(sectionEducationAndWork, "Educatoin & Work");
-				return this;
-			}
-			
-			public HomePage EducationSummary() {
-				WebElementClick(subsecEducationSummary, " Education Summary");
-				return this;
-			}
-			
-			public HomePage HighestLevelofEducation(String HighestLevelofEducation) {
-				WebEditEnterText(drpHighestLevelofEducation,HighestLevelofEducation,"Highest Level of Education");
-				return this;
-			}
-			
-			public HomePage CountryofEducation(String CountryofEducation) {
-				WebEditEnterText(drpCountryofEducation,CountryofEducation,"CountryofEducation");
-				return this;
-			}
-			
-			public HomePage InstituteName(String InstituteName) {
-				WebEditEnterText(txtInstituteName,InstituteName,"InstituteName");
-				return this;
-			}
-			
-			public HomePage StudyArea(String StudyArea) {
-				WebEditEnterText(drpStudyArea,StudyArea,"StudyArea");
-				return this;
-			}
-			
-			public HomePage CourseName(String CourseName) {
-				WebEditEnterText(drpCourseName,CourseName,"CourseName");
-				return this;
-			}
-			
-			public HomePage SelectStatus(String Status) {
-				strselectGender(radioStatus,"Status");
-				return this;
-			}
-			
-			public HomePage selectEASave(String Save) {
-				WebElementClick(btnEASave,"Save");
-				return this;
-			}
-			
-		//'******************************************************************************************
+		public HomePage EducationAndWork() {
+			WebElementClick(sectionEducationAndWork, "Educatoin & Work");
+			return this;
+		}
+		
+		public HomePage EducationSummary() {
+			WebElementClick(subsecEducationSummary, " Education Summary");
+			return this;
+		}
+		
+		public HomePage HighestLevelofEducation(String HighestLevelofEducation) {
+			WebEditEnterText(drpHighestLevelofEducation,HighestLevelofEducation,"Highest Level of Education");
+			return this;
+		}
+		
+		public HomePage CountryofEducation(String CountryofEducation) {
+			WebEditEnterText(drpCountryofEducation,CountryofEducation,"CountryofEducation");
+			return this;
+		}
+		
+		public HomePage InstituteName(String InstituteName) {
+			WebEditEnterText(txtInstituteName,InstituteName,"InstituteName");
+			return this;
+		}
+		
+		public HomePage StudyArea(String StudyArea) {
+			WebEditEnterText(drpStudyArea,StudyArea,"StudyArea");
+			return this;
+		}
+		
+		public HomePage CourseName(String CourseName) {
+			WebEditEnterText(drpCourseName,CourseName,"CourseName");
+			return this;
+		}
+		
+		public HomePage SelectStatus(String strStartus) {
+			strSelectStatus("Status",strStartus);
+			return this;
+		}
+		
+		public HomePage selectEASave(String Save) {
+			WebElementClick(btnEASave,"Save");
+			return this;
+		}
+		
+	//'******************************************************************************************
 
 		
 
