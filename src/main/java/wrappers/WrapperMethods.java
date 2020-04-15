@@ -321,6 +321,20 @@ public class WrapperMethods extends WebDriverSetup{
 		WebElementClick("xpath#//mat-option//span[normalize-space(text())='"+strValuetoselect+"']","Value Selected - "+strValuetoselect);
 	}
 	
+	public void strselectGender(String strgender, String objectName) {
+		WebElementClick("xpath#(//label[text()='Gender'])[1]//following-sibling::div//input[@value='"+strgender+"']", "Gender selected -"+strgender);	
+	}
+	
+	public void strselectMaritalstatus(String strmaritalstatus, String objectName) {
+		WebElementClick("xpath#(//label[text()='Marital Status'])[1]//following-sibling::div//input[@value='"+strmaritalstatus+"']", "Martial status selected -"+strmaritalstatus);	
+	}
+	
+	
+	
+	public void strSelectLabel(String strLabelReference, String strLabeltoSelect, String objectname) {
+		WebElementClick("xpath#(//span[(text()='"+strLabelReference+"')]//following::label[(text()='"+strLabeltoSelect+"')])[1]", "Label selected is -"+strLabeltoSelect);	
+
+	}
 	
 	public void ScrollIntoElement(String locator,String objectName) {
 		WebElement element = null;
