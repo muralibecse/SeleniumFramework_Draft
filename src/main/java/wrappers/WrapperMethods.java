@@ -364,8 +364,7 @@ public class WrapperMethods extends WebDriverSetup{
 		
 	}
 	
-
-	//***************************ANGULAR JS WRAPPER METHODS***************************************************//
+		//***************************ANGULAR JS WRAPPER METHODS***************************************************//
 	
 	/*
 	 * public synchronized void waitForJQueryLoad() { JavascriptExecutor jsExec =
@@ -511,6 +510,44 @@ public class WrapperMethods extends WebDriverSetup{
        waitUntilAngular5Ready();
    }
 	//***************************ANGULAR JS WRAPPER METHODS***************************************************//
-
+   public WebElement webElement(String locator) {
+		WebElement element = null;
+		try {
+			String []loc = locator.split("#",2);
+			switch(loc[0].toLowerCase()) {
+			case "id":
+				element = getDriver().findElement(By.id(loc[1]));
+				break;
+			case "xpath":
+				element = getDriver().findElement(By.xpath(loc[1]));
+				break;
+			case "css":
+				element = getDriver().findElement(By.cssSelector(loc[1]));
+				break;
+			case  "name":
+				element = getDriver().findElement(By.name(loc[1]));
+				break;
+			default:
+				throw new RuntimeException("Invalid Locator Type."+locator);
+			}
+			
+	}catch(Exception e) {
+		
+	}
+		return element;
+	}
+   
+   public void DragAndDrop(String sourceLocator,String destinationLocator) {
+	   try {
+		WebElement sourceElement = webElement(sourceLocator);
+		   WebElement destinationElement = webElement(destinationLocator);
+		   
+		   Actions action = new Actions(driver);
+		   action.dragAndDrop(sourceElement, destinationElement).build().perform();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+   }
 
 }
